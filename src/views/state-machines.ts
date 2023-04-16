@@ -14,7 +14,7 @@ export function getStateMachinesWebview(context: vscode.ExtensionContext, panel:
         <script src="${scriptUri}"></script>
         </head>
         <body>
-        <h1>AWS Step Functions Local State Machines:</h1>
+        <h1>AWS Step Functions State Machines:</h1>
         ${stateMachineList.join(", ")}
         </body>
     </html>`;
