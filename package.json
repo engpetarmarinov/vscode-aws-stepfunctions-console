@@ -17,7 +17,7 @@
       "properties": {
         "awsStepFunctionsConsole.endpoint": {
           "type": "string",
-          "default": "localhost:8083",
+          "default": "http://localhost:8083",
           "description": "The endpoint to use for AWS Step Functions local"
         },
         "awsStepFunctionsConsole.region": {

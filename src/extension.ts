@@ -12,7 +12,7 @@ export function activate(context: vscode.ExtensionContext) {
         try {
             const config = vscode.workspace.getConfiguration('awsStepFunctionsConsole');
             const region = config.get('region', 'us-east-1');
-            const endpoint = config.get('endpoint', 'localhost:8083');
+            const endpoint = config.get('endpoint', 'http://localhost:8083');
             const stepFunctions = createStepFunctionsClient(region, endpoint);
             const stateMachines = await fetchStateMachines(stepFunctions);
             const panel = vscode.window.createWebviewPanel(
