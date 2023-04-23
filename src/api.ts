@@ -18,6 +18,15 @@ export async function fetchStateMachines(stepFunctions: StepFunctions): Promise<
   return response.stateMachines;
 }
 
+export async function fetchStateMachineDefinition(stepFunctions: StepFunctions, stateMachineArn: string): Promise<StepFunctions.DescribeStateMachineOutput> {
+  const params = {
+    stateMachineArn,
+  };
+
+  const response = await stepFunctions.describeStateMachine(params).promise();
+  return response;
+}
+
 export async function fetchExecutions(stepfunctions: StepFunctions, stateMachineArn: string): Promise<StepFunctions.ExecutionList> {
   const params = {
     stateMachineArn,

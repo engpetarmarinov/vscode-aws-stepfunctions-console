@@ -1,6 +1,7 @@
 import * as vscode from 'vscode';
 import { createStepFunctionsClient, fetchStateMachines } from './api';
-import { getStateMachinesWebview } from './views/state-machines';
+import { getStateMachinesWebview } from './views/stateMachines';
+import { messageHandlerGetStateMachineDefinition as handleGetStateMachineDefinition } from './messageHandlers';
 
 // This method is called when your extension is activated
 // Your extension is activated the very first time the command is executed
@@ -19,7 +20,26 @@ export function activate(context: vscode.ExtensionContext) {
                 'aws-stepfunctions-console',
                 'AWS Step Functions State Machines',
                 vscode.ViewColumn.One,
-                {}
+                {
+                    enableScripts: true
+                }
+            );
+
+            // Handle messages from the webview
+            panel.webview.onDidReceiveMessage(
+                message => {
+                    switch (message.command) {
+                        case 'alert':
+                        vscode.window.showErrorMessage(message.text);
+                        return;
+                        case 'info':
+                        vscode.window.showInformationMessage(message.text);
+                        case 'getStateMachineDefinition':
+                        handleGetStateMachineDefinition(context, stepFunctions, message);
+                    }
+                },
+                undefined,
+                context.subscriptions
             );
 
             panel.webview.html = getStateMachinesWebview(context, panel, stateMachines);
