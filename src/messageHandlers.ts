@@ -1,19 +1,10 @@
 import * as vscode from 'vscode';
 import { fetchStateMachineDefinition } from './api';
-import { getStateMachineDefinitionWebview } from './views/stateMachines';
+import { AslVisualizationManager } from './visualizeStateMachine/aslVisualizationManager';
 
 export function messageHandlerGetStateMachineDefinition(context: vscode.ExtensionContext, stepFunctions: any, message: any) {
-    fetchStateMachineDefinition(stepFunctions, message.arn).then((stateMachineDescription) => {
-
-        const definitionPanel = vscode.window.createWebviewPanel(
-            'aws-stepfunctions-console',
-            `State Machine ${stateMachineDescription.name} Definition`,
-            vscode.ViewColumn.Two,
-            {
-                enableScripts: true
-            }
-        );
-
-        definitionPanel.webview.html = getStateMachineDefinitionWebview(context, definitionPanel, stateMachineDescription);
+    fetchStateMachineDefinition(stepFunctions, message.arn).then(async (stateMachineDescription) => {
+        const manager = new AslVisualizationManager(context);
+        await manager.visualizeStateMachine(stateMachineDescription.name, stateMachineDescription.definition);
     });
 }

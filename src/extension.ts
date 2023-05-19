@@ -2,6 +2,7 @@ import * as vscode from 'vscode';
 import { createStepFunctionsClient, fetchStateMachines } from './api';
 import { getStateMachinesWebview } from './views/stateMachines';
 import { messageHandlerGetStateMachineDefinition as handleGetStateMachineDefinition } from './messageHandlers';
+import { initalizeVisualizationResourcePaths, globals } from './globals';
 
 // This method is called when your extension is activated
 // Your extension is activated the very first time the command is executed
@@ -38,6 +39,8 @@ export function activate(context: vscode.ExtensionContext) {
                 undefined,
                 context.subscriptions
             );
+
+            globals.visualizationResourcePaths = initalizeVisualizationResourcePaths(context);
 
             panel.webview.html = getStateMachinesWebview(context, panel, stateMachines);
         } catch (err: any) {
