@@ -65,5 +65,10 @@
   "dependencies": {
     "aws-sdk": "^2.x",
     "d3": "^7.8.4"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/engpetarmarinov/vscode-aws-stepfunctions-console.git"
+  },
+  "homepage": "https://github.com/engpetarmarinov/vscode-aws-stepfunctions-console/blob/main/README.md"
 }
