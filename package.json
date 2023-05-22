@@ -70,5 +70,9 @@
     "type": "git",
     "url": "https://github.com/engpetarmarinov/vscode-aws-stepfunctions-console.git"
   },
-  "homepage": "https://github.com/engpetarmarinov/vscode-aws-stepfunctions-console/blob/main/README.md"
+  "bugs": {
+    "url": "https://github.com/engpetarmarinov/vscode-aws-stepfunctions-console/issues"
+  },
+  "homepage": "https://github.com/engpetarmarinov/vscode-aws-stepfunctions-console/blob/main/README.md",
+  "license": "SEE LICENSE IN LICENSE.txt"
 }
