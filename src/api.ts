@@ -28,11 +28,21 @@ export async function fetchStateMachineDefinition(stepFunctions: StepFunctions, 
 }
 
 export async function fetchExecutions(stepfunctions: StepFunctions, stateMachineArn: string): Promise<StepFunctions.ExecutionList> {
-  const params = {
+  const params: StepFunctions.ListExecutionsInput = {
     stateMachineArn,
     // statusFilter: 'RUNNING'
   };
 
   const response = await stepfunctions.listExecutions(params).promise();
   return response.executions;
+}
+
+export async function fetchExecution(stepfunctions: StepFunctions, executionArn: string): Promise<StepFunctions.GetExecutionHistoryOutput> {
+  const params: StepFunctions.GetExecutionHistoryInput = {
+    executionArn,
+    includeExecutionData: true
+  };
+
+  const response = await stepfunctions.getExecutionHistory(params).promise();
+  return response;
 }

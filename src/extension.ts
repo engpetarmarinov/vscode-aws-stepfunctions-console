@@ -1,7 +1,6 @@
 import * as vscode from 'vscode';
 import { createStepFunctionsClient, fetchStateMachines } from './api';
-import { getStateMachinesWebview } from './views/stateMachines';
-import { messageHandlerGetStateMachineDefinition as handleGetStateMachineDefinition } from './messageHandlers';
+import { handleGetStateMachines, handleGetStateMachineDefinition, handleGetStateMachineExecutions, handleGetStateMachineExecution} from './messageHandlers';
 import { initalizeVisualizationResourcePaths, globals } from './globals';
 
 // This method is called when your extension is activated
@@ -11,9 +10,11 @@ export function activate(context: vscode.ExtensionContext) {
         try {
             const config = vscode.workspace.getConfiguration('awsStepFunctionsConsole');
             const region = config.get('region', 'us-east-1');
-            const endpoint = config.get('endpoint', 'http://localhost:8083');
+            const endpoint = config.get('endpoint', 'http://localhost:8084');
             const stepFunctions = createStepFunctionsClient(region, endpoint);
-            const stateMachines = await fetchStateMachines(stepFunctions);
+            
+            globals.visualizationResourcePaths = initalizeVisualizationResourcePaths(context);
+
             const panel = vscode.window.createWebviewPanel(
                 'aws-stepfunctions-console',
                 'AWS Step Functions State Machines',
@@ -28,21 +29,25 @@ export function activate(context: vscode.ExtensionContext) {
                 message => {
                     switch (message.command) {
                         case 'alert':
-                        vscode.window.showErrorMessage(message.text);
-                        return;
+                            vscode.window.showErrorMessage(message.text);
+                            return;
                         case 'info':
-                        vscode.window.showInformationMessage(message.text);
+                            vscode.window.showInformationMessage(message.text);
+                        case 'getStateMachines':
+                            handleGetStateMachines(context, panel, stepFunctions);
                         case 'getStateMachineDefinition':
-                        handleGetStateMachineDefinition(context, stepFunctions, message);
+                            handleGetStateMachineDefinition(context, stepFunctions, message);
+                        case 'getStateMachineExecutions':
+                            handleGetStateMachineExecutions(context, panel, stepFunctions, message);
+                        case 'getStateMachineExecution':
+                            handleGetStateMachineExecution(context, panel, stepFunctions, message);
                     }
                 },
                 undefined,
                 context.subscriptions
             );
 
-            globals.visualizationResourcePaths = initalizeVisualizationResourcePaths(context);
-
-            panel.webview.html = getStateMachinesWebview(context, panel, stateMachines);
+            handleGetStateMachines(context, panel, stepFunctions);
         } catch (err: any) {
             vscode.window.showErrorMessage(`Error: ${err.message}`);
         }

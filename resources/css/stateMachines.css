@@ -1,3 +1,7 @@
 .state-machine-list-btn {
     cursor: pointer;
 }
+
+.state-machine-execution-list-btn {
+    cursor: pointer;
+}
