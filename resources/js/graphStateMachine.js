@@ -13,6 +13,16 @@ function renderStateMachine(data) {
     graph.render();
 }
 
+function renderExecution(data, execution) {
+    let options = {
+        width: window.innerWidth,
+        height: window.innerHeight,
+        resizeHeight: false,
+    };
+    graph = new sfn.StateMachineExecutionGraph(JSON.parse(data), execution, containerId, options);
+    graph.render();
+}
+
 const centerBtn = document.getElementById('center');
 const zoominBtn = document.getElementById('zoomin');
 const zoomoutBtn = document.getElementById('zoomout');
@@ -29,7 +39,11 @@ function updateGraph(message) {
     statusInfoContainer.classList.add('syncing-asl');
 
     try {
-        renderStateMachine(message.stateMachineData);
+        if (message.executionData) {
+            renderExecution(message.stateMachineData, message.executionData);
+        } else {
+            renderStateMachine(message.stateMachineData);
+        }
 
         vscode.postMessage({
             command: 'updateResult',

@@ -1,5 +1,7 @@
 import * as vscode from 'vscode';
 import { globals } from '../globals';
+import { StepFunctions } from 'aws-sdk';
+import { StateMachine } from '../models/StateMachine';
 
 export interface MessageObject {
     command: string
@@ -15,10 +17,12 @@ export class AslVisualization {
     private readonly onVisualizationDisposeEmitter = new vscode.EventEmitter<void>();
     private readonly stateMachineName: string;
     private readonly stateMachineDefinition: string;
-
-    public constructor(stateMachineName: string, stateMachineDefinition: string) {
+    private readonly execution?: StepFunctions.GetExecutionHistoryOutput;
+    
+    public constructor(stateMachineName: string, stateMachineDefinition: string, execution?: StepFunctions.GetExecutionHistoryOutput) {
         this.stateMachineName = stateMachineName;
         this.stateMachineDefinition = stateMachineDefinition;
+        this.execution = execution;
         this.webviewPanel = this.setupWebviewPanel();
     }
 
@@ -42,7 +46,7 @@ export class AslVisualization {
         this.getPanel()?.reveal();
     }
 
-    public async sendUpdateMessage(stateMachineData: string) {
+    public async sendUpdateMessage(stateMachineData: string, executionData?: StepFunctions.GetExecutionHistoryOutput) {
         const webview = this.getWebview();
         if (this.isPanelDisposed || !webview) {
             return;
@@ -52,6 +56,7 @@ export class AslVisualization {
         webview.postMessage({
             command: 'update',
             stateMachineData,
+            executionData
         });
     }
 
@@ -71,7 +76,7 @@ export class AslVisualization {
             panel.webview.asWebviewUri(globals.visualizationResourcePaths.stateMachineCustomThemeCSS),
             panel.webview.cspSource,
             {
-                inSync: 'Previewing '+this.stateMachineName,
+                inSync: 'Previewing ' + this.stateMachineName,
                 notInSync: 'Errors detected. Cannot preview.',
                 syncing: 'Rendering ASL graph...',
             }
@@ -90,7 +95,7 @@ export class AslVisualization {
                     case 'webviewRendered': {
                         // Webview has finished rendering, so now we can give it our
                         // initial state machine definition.
-                        await this.sendUpdateMessage(this.stateMachineDefinition);
+                        await this.sendUpdateMessage(this.stateMachineDefinition, this.execution);
                         break;
                     }
                 }
@@ -122,7 +127,7 @@ export class AslVisualization {
     private createVisualizationWebviewPanel(): vscode.WebviewPanel {
         return vscode.window.createWebviewPanel(
             'stateMachineVisualization',
-            'Graph: '+this.stateMachineName,
+            'Graph: ' + this.stateMachineName,
             {
                 preserveFocus: true,
                 viewColumn: vscode.ViewColumn.Beside,

@@ -1,17 +1,18 @@
 import * as vscode from 'vscode';
 import { AslVisualization } from './aslVisualization';
 import { Error } from 'aws-sdk/clients/servicecatalog';
-
+import { StepFunctions } from 'aws-sdk';
 
 export abstract class AbstractAslVisualizationManager<T extends AslVisualization = AslVisualization> {
     protected abstract readonly name: string;
     protected readonly managedVisualizations = new Map<string, T>();
 
-    public constructor(private readonly extensionContext: vscode.ExtensionContext) {}
+    public constructor(private readonly extensionContext: vscode.ExtensionContext) { }
 
     public abstract visualizeStateMachine(
         stateMachineName: string,
-        stateMachineDefinition: string
+        stateMachineDefinition: string,
+        execution?: StepFunctions.GetExecutionHistoryOutput | undefined
     ): Promise<vscode.WebviewPanel | undefined>;
 
     protected pushToExtensionContextSubscriptions(visualizationDisposable: vscode.Disposable): void {

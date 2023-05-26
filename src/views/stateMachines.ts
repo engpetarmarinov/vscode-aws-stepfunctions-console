@@ -45,7 +45,11 @@ export function getStateMachineExecutionsWebview(context: vscode.ExtensionContex
         <h1>AWS Step Functions State Machine Executions:</h1>
         <a href=# class="state-machines-btn">&lt;&lt; Back to State Machines</a>
         <ul data-state-machine-arn="${stateMachineArn}">
-            ${executionList.map((execution: StepFunctions.ExecutionListItem) => `<li class=state-machine-execution-list-btn data-state-machine-execution-arn="${execution.executionArn}">${execution.name}</li>`).join("\n")}
+            ${executionList.map((execution: StepFunctions.ExecutionListItem) => 
+                `<li class=state-machine-execution-list-btn data-state-machine-execution-arn="${execution.executionArn}">
+                    ${execution.startDate} ${execution.name} ${execution.status}
+                </li>`
+            ).join("\n")}
         </ul>
         <script src="${scriptUri}"></script>
         </body>

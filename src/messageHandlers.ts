@@ -24,7 +24,11 @@ export function handleGetStateMachineExecutions(context: vscode.ExtensionContext
 }
 
 export function handleGetStateMachineExecution(context: vscode.ExtensionContext, panel: vscode.WebviewPanel, stepFunctions: StepFunctions, message: any) {
-    fetchExecution(stepFunctions, message.executionArn).then((execution: StepFunctions.GetExecutionHistoryOutput) => {
-        panel.webview.html = getStateMachineExecutionWebview(context, panel, message.stateMachineArn, execution);
+    fetchStateMachineDefinition(stepFunctions, message.stateMachineArn).then(async (stateMachineDescription: StepFunctions.DescribeStateMachineOutput) => {
+        fetchExecution(stepFunctions, message.executionArn).then(async (execution: StepFunctions.GetExecutionHistoryOutput) => {
+            panel.webview.html = getStateMachineExecutionWebview(context, panel, message.stateMachineArn, execution);
+            const manager = new AslVisualizationManager(context);
+            await manager.visualizeStateMachine(stateMachineDescription.name, stateMachineDescription.definition, execution);
+        });
     });
 }
