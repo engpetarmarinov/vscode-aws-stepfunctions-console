@@ -1,7 +1,6 @@
 import * as vscode from 'vscode';
 import { globals } from '../globals';
 import { StepFunctions } from 'aws-sdk';
-import { StateMachine } from '../models/StateMachine';
 
 export interface MessageObject {
     command: string
