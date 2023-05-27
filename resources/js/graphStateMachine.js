@@ -27,6 +27,7 @@ const centerBtn = document.getElementById('center');
 const zoominBtn = document.getElementById('zoomin');
 const zoomoutBtn = document.getElementById('zoomout');
 let lastStateMachineData;
+let lastExecutionData;
 
 function updateGraph(message) {
     let options = {
@@ -54,6 +55,7 @@ function updateGraph(message) {
         statusInfoContainer.classList.add('in-sync-asl');
         hasRenderedOnce = true;
         lastStateMachineData = message.stateMachineData;
+        lastExecutionData = message.executionData;
     } catch (err) {
         console.log('Error parsing state machine definition.');
         console.log(err);
@@ -87,7 +89,11 @@ if (previewButton) {
 
 centerBtn.addEventListener('click', () => {
     if (lastStateMachineData) {
-        renderStateMachine(lastStateMachineData);
+        if (lastExecutionData) {
+            renderExecution(lastStateMachineData, lastExecutionData);
+        } else {
+            renderStateMachine(lastStateMachineData);
+        }
     }
 });
 

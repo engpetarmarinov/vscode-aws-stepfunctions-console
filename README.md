@@ -1,6 +1,8 @@
 # aws-stepfunctions-console
 VS Code Extension to browse AWS Stepfunctions and executions
 
+[demo](demo.mkv)
+
 ## Features
 * AWS Stepfunctions local support
 * List stepfunctions state machines
