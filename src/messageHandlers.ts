@@ -4,6 +4,8 @@ import { AslVisualizationManager } from './visualizeStateMachine/aslVisualizatio
 import { StepFunctions } from 'aws-sdk';
 import { getStateMachinesWebview, getStateMachineExecutionsWebview, getStateMachineExecutionWebview } from './views/stateMachines';
 
+let lastExecution: StepFunctions.GetExecutionHistoryOutput = { events: [] };
+
 export function handleGetStateMachines(context: vscode.ExtensionContext, panel: vscode.WebviewPanel, stepFunctions: StepFunctions) {
     fetchStateMachines(stepFunctions).then(async (stateMachines: StepFunctions.StateMachineList) => {
         panel.webview.html = getStateMachinesWebview(context, panel, stateMachines);
@@ -29,6 +31,7 @@ export function handleGetStateMachineExecution(context: vscode.ExtensionContext,
             panel.webview.html = getStateMachineExecutionWebview(context, panel, message.stateMachineArn, execution);
             const manager = new AslVisualizationManager(context);
             await manager.visualizeStateMachine(stateMachineDescription.name, stateMachineDescription.definition, execution);
+            lastExecution = execution;
         });
     });
 }

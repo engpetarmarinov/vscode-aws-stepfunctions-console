@@ -1,5 +1,5 @@
 import * as vscode from 'vscode';
-import { createStepFunctionsClient, fetchStateMachines } from './api';
+import { createStepFunctionsClient } from './api';
 import { handleGetStateMachines, handleGetStateMachineDefinition, handleGetStateMachineExecutions, handleGetStateMachineExecution} from './messageHandlers';
 import { initalizeVisualizationResourcePaths, globals } from './globals';
 
@@ -33,14 +33,21 @@ export function activate(context: vscode.ExtensionContext) {
                             return;
                         case 'info':
                             vscode.window.showInformationMessage(message.text);
+                            break;
                         case 'getStateMachines':
                             handleGetStateMachines(context, panel, stepFunctions);
+                            break;
                         case 'getStateMachineDefinition':
                             handleGetStateMachineDefinition(context, stepFunctions, message);
+                            break;
                         case 'getStateMachineExecutions':
                             handleGetStateMachineExecutions(context, panel, stepFunctions, message);
+                            break;
                         case 'getStateMachineExecution':
                             handleGetStateMachineExecution(context, panel, stepFunctions, message);
+                            break;
+                        default:
+                            vscode.window.showErrorMessage(`Error: Unrecognized command ${message.command}`);
                     }
                 },
                 undefined,

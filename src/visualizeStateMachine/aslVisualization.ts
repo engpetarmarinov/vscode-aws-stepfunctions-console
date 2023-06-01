@@ -59,6 +59,26 @@ export class AslVisualization {
         });
     }
 
+    public async sendShowInputOutputMessage(stateName: string, executionData?: StepFunctions.GetExecutionHistoryOutput) {
+        const webview = this.getWebview();
+        if (this.isPanelDisposed || !webview) {
+            return;
+        }
+
+        const input = executionData?.events.find((event) => event.stateEnteredEventDetails?.name === stateName)?.stateEnteredEventDetails?.input;
+        let output = executionData?.events.find((event) => event.stateExitedEventDetails?.name === stateName)?.stateExitedEventDetails?.output;
+        if (output === undefined)  {
+            const failedEvent = executionData?.events.find((event) => event.executionFailedEventDetails?.error?.length)?.executionFailedEventDetails
+            output = JSON.stringify(failedEvent ? failedEvent : '{}');
+        }
+
+        webview.postMessage({
+            command: 'showInputOutput', 
+            input,
+            output
+        });
+    }
+
     protected getText(textDocument: vscode.TextDocument): string {
         return textDocument.getText();
     }
@@ -97,6 +117,9 @@ export class AslVisualization {
                         await this.sendUpdateMessage(this.stateMachineDefinition, this.execution);
                         break;
                     }
+                    case 'getInputOutput':
+                        await this.sendShowInputOutputMessage(message.text, this.execution);
+                        break;
                 }
             })
         );
@@ -173,6 +196,21 @@ export class AslVisualization {
                 <body>
                     <div id="svgcontainer" class="workflowgraph">
                         <svg></svg>
+                    </div>
+                    <div id="input-output-modal" class="modal">
+                        <div class="modal-content">
+                            <div id="input-output-modal-close-btn" class="modal-close"></div>
+                            <div class="modal-body">
+                                <div class="modal-input">
+                                    <h2>Input</h2>
+                                    <pre id="input-output-modal-input"></pre>
+                                </div>
+                                <div class="modal-input">
+                                    <h2>Output</h2>
+                                    <pre id="input-output-modal-output"></pre>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                     <div class="status-info">
                         <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
