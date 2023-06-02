@@ -1,4 +1,4 @@
-# vscode-aws-stepfunctions-console
+# AWS Stepfunctions Console for Visual Studio Code
 VS Code Extension to browse AWS Stepfunctions state machines and executions
 
 ## Features

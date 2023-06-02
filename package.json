@@ -2,7 +2,7 @@
   "name": "aws-stepfunctions-console",
   "displayName": "AWS Stepfunctions Console",
   "description": "Browse AWS Stepfunctions state machines and executions",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "publisher": "PetarMarinov",
   "engines": {
     "vscode": "^1.77.0"
