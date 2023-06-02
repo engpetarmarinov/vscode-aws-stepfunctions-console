@@ -4,6 +4,7 @@
   "description": "Browse AWS Step Functions state machines and executions",
   "version": "0.0.6",
   "publisher": "PetarMarinov",
+  "icon": "resources/market/logo.png",
   "engines": {
     "vscode": "^1.77.0"
   },
