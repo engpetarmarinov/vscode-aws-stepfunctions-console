@@ -1,7 +1,7 @@
-.state-machine-list-btn {
-    cursor: pointer;
-}
-
-.state-machine-execution-list-btn {
-    cursor: pointer;
+.state-machine-list-btn:hover,
+.state-machines-btn:hover,
+.state-machine-execution-list-btn:hover,
+.state-machine-executions-btn:hover {
+    cursor: pointer !important;
+    color: #FFF !important;;
 }

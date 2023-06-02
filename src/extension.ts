@@ -12,15 +12,21 @@ export function activate(context: vscode.ExtensionContext) {
             const region = config.get('region', 'us-east-1');
             const endpoint = config.get('endpoint', 'http://localhost:8084');
             const stepFunctions = createStepFunctionsClient(region, endpoint);
-            
             globals.visualizationResourcePaths = initalizeVisualizationResourcePaths(context);
-
             const panel = vscode.window.createWebviewPanel(
                 'aws-stepfunctions-console',
                 'AWS Step Functions State Machines',
-                vscode.ViewColumn.One,
                 {
-                    enableScripts: true
+                    preserveFocus: true,
+                    viewColumn: vscode.ViewColumn.One,
+                },
+                {
+                    enableScripts: true,
+                    localResourceRoots: [
+                        globals.visualizationResourcePaths.localWebviewScriptsPath,
+                        globals.visualizationResourcePaths.stateMachineCustomThemePath,
+                    ],
+                    retainContextWhenHidden: true,
                 }
             );
 

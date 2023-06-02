@@ -280,7 +280,8 @@ a {
 .modal-content {
     background-color: #fefefe;
     margin: auto;
-    padding: 20px;
+    padding: 8px 16px;
+    border-radius: 5px;
     border: 1px solid #888;
     width: 80%;
     max-width: 600px;
@@ -317,11 +318,14 @@ a {
 }
 
 .modal-close {
-    height: 30px;
-    width: 30px;
+    height: 20px;
+    width: 20px;
     background-color: #d8d8d8;
     border-radius: 5px;
-    position: relative;
+    position: absolute;
+    right: 0;
+    top: 0;
+    display: inline-block;
 }
 
 .modal-close:after {
@@ -331,14 +335,18 @@ a {
     left: 0;
     right: 0;
     content: "\d7";
-    font-size: 15px; 
+    font-size: 10px;
     color: #000000;
-    line-height: 30px;
+    line-height: 20px;
     text-align: center;
 }
 
 .modal-close:hover,
 .modal-close:focus {
-    color: rgb(49, 45, 45);
     cursor: pointer;
+}
+
+.modal-close:hover:after,
+.modal-close:focus:after {
+    color: rgb(80, 77, 77);
 }

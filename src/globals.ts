@@ -1,7 +1,7 @@
 import * as vscode from 'vscode';
 import { join } from 'path';
 
-export let globals = {
+export let globals: Globals = {
     visualizationResourcePaths: {},
 } as Globals;
 
