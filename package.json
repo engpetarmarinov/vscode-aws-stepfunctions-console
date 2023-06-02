@@ -2,7 +2,7 @@
   "name": "aws-stepfunctions-console",
   "displayName": "AWS Step Functions Console",
   "description": "Browse AWS Step Functions state machines and executions",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "publisher": "PetarMarinov",
   "icon": "resources/market/logo.png",
   "engines": {
