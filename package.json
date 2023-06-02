@@ -1,8 +1,8 @@
 {
   "name": "aws-stepfunctions-console",
-  "displayName": "AWS Stepfunctions Console",
-  "description": "Browse AWS Stepfunctions state machines and executions",
-  "version": "0.0.4",
+  "displayName": "AWS Step Functions Console",
+  "description": "Browse AWS Step Functions state machines and executions",
+  "version": "0.0.5",
   "publisher": "PetarMarinov",
   "engines": {
     "vscode": "^1.77.0"
@@ -31,7 +31,7 @@
     "commands": [
       {
         "command": "aws-stepfunctions-console.aws-stepfunctions-console",
-        "title": "AWS Stepfunctions Console"
+        "title": "AWS Step Functions Console"
       }
     ]
   },
