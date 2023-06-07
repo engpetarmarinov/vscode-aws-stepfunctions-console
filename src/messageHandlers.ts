@@ -20,8 +20,8 @@ export function handleGetStateMachineDefinition(context: vscode.ExtensionContext
 }
 
 export function handleGetStateMachineExecutions(context: vscode.ExtensionContext, panel: vscode.WebviewPanel, stepFunctions: StepFunctions, message: any) {
-    fetchExecutions(stepFunctions, message.arn).then((executionList: StepFunctions.ExecutionList) => {
-        panel.webview.html = getStateMachineExecutionsWebview(context, panel, message.arn, executionList);
+    fetchExecutions(stepFunctions, message.arn, message.nextToken).then((executionList: StepFunctions.Types.ListExecutionsOutput) => {
+        panel.webview.html = getStateMachineExecutionsWebview(context, panel, message.arn, executionList, message.nextToken);
     });
 }
 

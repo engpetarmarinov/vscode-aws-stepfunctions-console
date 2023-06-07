@@ -4,6 +4,6 @@ All notable changes to the "aws-stepfunctions-console" extension will be documen
 
 Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file.
 
-## [Unreleased]
-
-- Initial release
+## [0.0.8] - 2023-03-05
+### Added
+- executions pagination

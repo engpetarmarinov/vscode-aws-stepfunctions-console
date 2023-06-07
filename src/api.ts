@@ -18,7 +18,7 @@ export async function fetchStateMachines(stepFunctions: StepFunctions): Promise<
   return response.stateMachines;
 }
 
-export async function fetchStateMachineDefinition(stepFunctions: StepFunctions, stateMachineArn: string): Promise<StepFunctions.DescribeStateMachineOutput> {
+export async function fetchStateMachineDefinition(stepFunctions: StepFunctions, stateMachineArn: StepFunctions.Arn): Promise<StepFunctions.DescribeStateMachineOutput> {
   const params = {
     stateMachineArn,
   };
@@ -27,17 +27,18 @@ export async function fetchStateMachineDefinition(stepFunctions: StepFunctions, 
   return response;
 }
 
-export async function fetchExecutions(stepfunctions: StepFunctions, stateMachineArn: string): Promise<StepFunctions.ExecutionList> {
+export async function fetchExecutions(stepfunctions: StepFunctions, stateMachineArn: StepFunctions.Arn, nextToken?: StepFunctions.ListExecutionsPageToken): Promise<StepFunctions.Types.ListExecutionsOutput> {
   const params: StepFunctions.ListExecutionsInput = {
     stateMachineArn,
-    // statusFilter: 'RUNNING'
+    maxResults: 50,
+    nextToken,
   };
 
   const response = await stepfunctions.listExecutions(params).promise();
-  return response.executions;
+  return response;
 }
 
-export async function fetchExecution(stepfunctions: StepFunctions, executionArn: string): Promise<StepFunctions.GetExecutionHistoryOutput> {
+export async function fetchExecution(stepfunctions: StepFunctions, executionArn: StepFunctions.Arn): Promise<StepFunctions.GetExecutionHistoryOutput> {
   const params: StepFunctions.GetExecutionHistoryInput = {
     executionArn,
     includeExecutionData: true

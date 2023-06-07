@@ -45,3 +45,16 @@ document.querySelectorAll('.state-machine-executions-btn').forEach((li) => {
     });
   });
 });
+
+document.querySelectorAll('.state-machine-execution-list-next-btn').forEach((btn) => {
+  btn.addEventListener('click', (e) => {
+    const element = document.querySelector('[data-state-machine-arn]');
+    const stateMachineArn = element.getAttribute('data-state-machine-arn');
+    const nextToken = e.target.getAttribute('data-next-token');
+    vscode.postMessage({
+      command: 'getStateMachineExecutions',
+      arn: stateMachineArn,
+      nextToken: nextToken ? nextToken : undefined
+    });
+  });
+});
