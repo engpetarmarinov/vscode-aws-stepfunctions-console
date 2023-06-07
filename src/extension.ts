@@ -41,7 +41,7 @@ export function activate(context: vscode.ExtensionContext) {
                             vscode.window.showInformationMessage(message.text);
                             break;
                         case 'getStateMachines':
-                            handleGetStateMachines(context, panel, stepFunctions);
+                            handleGetStateMachines(context, panel, stepFunctions, message);
                             break;
                         case 'getStateMachineDefinition':
                             handleGetStateMachineDefinition(context, stepFunctions, message);
@@ -60,7 +60,7 @@ export function activate(context: vscode.ExtensionContext) {
                 context.subscriptions
             );
 
-            handleGetStateMachines(context, panel, stepFunctions);
+            handleGetStateMachines(context, panel, stepFunctions, {});
         } catch (err: any) {
             vscode.window.showErrorMessage(`Error: ${err.message}`);
         }

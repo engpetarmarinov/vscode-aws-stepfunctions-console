@@ -2,8 +2,10 @@ const vscode = acquireVsCodeApi();
 
 document.querySelectorAll('.state-machines-btn').forEach((li) => {
   li.addEventListener('click', (e) => {
+    const nextToken = e.target.getAttribute('data-next-token');
     vscode.postMessage({
-      command: 'getStateMachines'
+      command: 'getStateMachines',
+      nextToken: nextToken ? nextToken : undefined
     });
   });
 });
@@ -42,6 +44,16 @@ document.querySelectorAll('.state-machine-executions-btn').forEach((li) => {
     vscode.postMessage({
       command: 'getStateMachineExecutions',
       arn: stateMachineArn
+    });
+  });
+});
+
+document.querySelectorAll('.state-machine-list-next-btn').forEach((btn) => {
+  btn.addEventListener('click', (e) => {
+    const nextToken = e.target.getAttribute('data-next-token');
+    vscode.postMessage({
+      command: 'getStateMachines',
+      nextToken: nextToken ? nextToken : undefined
     });
   });
 });

@@ -3,7 +3,36 @@ import * as vscode from 'vscode';
 import { StateMachine } from '../models/StateMachine';
 import { join } from 'path';
 
+let stateMachinePrevTokens: Array<StepFunctions.ListExecutionsPageToken> = new Array<StepFunctions.ListExecutionsPageToken>();
 let stateMachineExecutionsPrevTokens: Map<StepFunctions.Arn, Array<StepFunctions.ListExecutionsPageToken>> = new Map<StepFunctions.Arn, Array<StepFunctions.ListExecutionsPageToken>>();
+
+function getStateMachinesPrevToken(currentToken?: StepFunctions.ListExecutionsPageToken): StepFunctions.ListExecutionsPageToken | undefined {
+    if (!currentToken) {
+        return undefined;
+    }
+
+    for (let i = 0; i < stateMachinePrevTokens.length; i++) {
+        if (stateMachinePrevTokens[i] === currentToken) {
+            return stateMachinePrevTokens[i - 1];
+        }
+    }
+
+    return undefined;
+}
+
+function setStateMachinesPrevToken(currentToken?: StepFunctions.ListExecutionsPageToken): void {
+    if (!currentToken) {
+        return;
+    }
+
+    for (let i = 0; i < stateMachinePrevTokens.length; i++) {
+        if (stateMachinePrevTokens[i] === currentToken) {
+            return;
+        }
+    }
+
+    stateMachinePrevTokens.push(currentToken);
+}
 
 function getExecutionsPrevToken(stateMachineArn: StepFunctions.Arn, currentToken?: StepFunctions.ListExecutionsPageToken): StepFunctions.ListExecutionsPageToken | undefined {
     const existingTokens = stateMachineExecutionsPrevTokens.get(stateMachineArn);
@@ -41,15 +70,22 @@ function setExecutionsPrevToken(stateMachineArn: StepFunctions.Arn, currentToken
     stateMachineExecutionsPrevTokens.set(stateMachineArn, existingTokens);
 }
 
-export function getStateMachinesWebview(context: vscode.ExtensionContext, panel: vscode.WebviewPanel, stateMachines: StepFunctions.StateMachineList): string {
+export function getStateMachinesWebview(
+    context: vscode.ExtensionContext,
+    panel: vscode.WebviewPanel,
+    stateMachines: StepFunctions.ListStateMachinesOutput, 
+    currentToken?: StepFunctions.ListExecutionsPageToken): string {
     const scriptUri = panel.webview.asWebviewUri(vscode.Uri.file(context.asAbsolutePath(join('resources', 'js', 'stateMachines.js'))));
     const cssUri = panel.webview.asWebviewUri(vscode.Uri.file(context.asAbsolutePath(join('resources', 'css', 'stateMachines.css'))));
     const cspSource = panel.webview.cspSource;
 
     let stateMachineList: StateMachine[] = [];
-    stateMachines.forEach((stateMachine) => {
+    stateMachines.stateMachines.forEach((stateMachine) => {
         stateMachineList.push(new StateMachine(stateMachine.name, stateMachine.stateMachineArn, stateMachine.type));
     });
+
+    const prevToken = getStateMachinesPrevToken(currentToken);
+    setStateMachinesPrevToken(currentToken);
 
     return `<html>
         <head>
@@ -69,6 +105,10 @@ export function getStateMachinesWebview(context: vscode.ExtensionContext, panel:
         <ul>
             ${stateMachineList.map((stateMachine) => `<li class="state-machine-list-btn" data-state-machine-arn="${stateMachine.arn}">${stateMachine.name}</li>`).join("\n")}
         </ul>
+        <div class="pagination-container">
+            <a href="#" ${prevToken || currentToken ? "" : "disabled"} class="state-machine-list-next-btn" data-next-token="${prevToken ? prevToken : ''}">&lt;&lt; Prev</a>
+            <a href="#" ${stateMachines.nextToken ? "" : "disabled"} class="state-machine-list-next-btn" data-next-token="${stateMachines.nextToken}">Next &gt;&gt;</a>
+        </div>
         <script src="${scriptUri}"></script>
         </body>
     </html>`;

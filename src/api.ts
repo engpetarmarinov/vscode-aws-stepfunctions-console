@@ -13,9 +13,14 @@ export function createStepFunctionsClient(region: string, endpoint: string): Ste
   return new StepFunctions(config);
 }
 
-export async function fetchStateMachines(stepFunctions: StepFunctions): Promise<StepFunctions.StateMachineList> {
-  const response = await stepFunctions.listStateMachines().promise();
-  return response.stateMachines;
+export async function fetchStateMachines(stepFunctions: StepFunctions, nextToken?: StepFunctions.PageToken): Promise<StepFunctions.ListStateMachinesOutput> {
+  const params: StepFunctions.ListStateMachinesInput = {
+    maxResults: 50,
+    nextToken,
+  };
+
+  const response = await stepFunctions.listStateMachines(params).promise();
+  return response;
 }
 
 export async function fetchStateMachineDefinition(stepFunctions: StepFunctions, stateMachineArn: StepFunctions.Arn): Promise<StepFunctions.DescribeStateMachineOutput> {
@@ -41,7 +46,7 @@ export async function fetchExecutions(stepfunctions: StepFunctions, stateMachine
 export async function fetchExecution(stepfunctions: StepFunctions, executionArn: StepFunctions.Arn): Promise<StepFunctions.GetExecutionHistoryOutput> {
   const params: StepFunctions.GetExecutionHistoryInput = {
     executionArn,
-    includeExecutionData: true
+    includeExecutionData: true,
   };
 
   const response = await stepfunctions.getExecutionHistory(params).promise();

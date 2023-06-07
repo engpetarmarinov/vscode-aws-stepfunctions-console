@@ -6,9 +6,9 @@ import { getStateMachinesWebview, getStateMachineExecutionsWebview, getStateMach
 
 let lastExecution: StepFunctions.GetExecutionHistoryOutput = { events: [] };
 
-export function handleGetStateMachines(context: vscode.ExtensionContext, panel: vscode.WebviewPanel, stepFunctions: StepFunctions) {
-    fetchStateMachines(stepFunctions).then(async (stateMachines: StepFunctions.StateMachineList) => {
-        panel.webview.html = getStateMachinesWebview(context, panel, stateMachines);
+export function handleGetStateMachines(context: vscode.ExtensionContext, panel: vscode.WebviewPanel, stepFunctions: StepFunctions, message: any) {
+    fetchStateMachines(stepFunctions, message.nextToken).then(async (stateMachines: StepFunctions.ListStateMachinesOutput) => {
+        panel.webview.html = getStateMachinesWebview(context, panel, stateMachines, message.nextToken);
     });
 }
 
