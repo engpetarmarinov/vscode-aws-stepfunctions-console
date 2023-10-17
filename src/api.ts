@@ -44,11 +44,20 @@ export async function fetchExecutions(stepfunctions: StepFunctions, stateMachine
 }
 
 export async function fetchExecution(stepfunctions: StepFunctions, executionArn: StepFunctions.Arn): Promise<StepFunctions.GetExecutionHistoryOutput> {
-  const params: StepFunctions.GetExecutionHistoryInput = {
-    executionArn,
-    includeExecutionData: true,
-  };
+  var events:StepFunctions.HistoryEventList = [];
+  let nextToken = "0";
 
-  const response = await stepfunctions.getExecutionHistory(params).promise();
-  return response;
+  while (nextToken !== "") {
+    const params: StepFunctions.GetExecutionHistoryInput = {
+      executionArn,
+      includeExecutionData: true,
+      nextToken: nextToken
+    };
+
+    const response = await stepfunctions.getExecutionHistory(params).promise();
+    events.push(...response.events);
+    nextToken = response.nextToken ?? "";
+  }
+
+  return { events: events, nextToken: "" };
 }
